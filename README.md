@@ -1,2 +1,2 @@
 # tarea2 de eda
-hay qeu hacer distintos tipos de sort en c
+hay que hacer distintos tipos de sort en c

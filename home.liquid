@@ -1,0 +1,113 @@
+<!-- Carousel Section-->
+{% include 'carousel_home' with product %}
+
+<div class="container">
+
+  <!-- Banners Section -->
+  {% include 'banners_home' with product %}
+
+  {% case options.products_home %}
+  {% when "featured-home" or "latest-and-featured-home"  %}
+  {% if products.featured != empty %}
+  <!-- Featured Products Section -->
+  <div class="row mb-md-5 mb-4 mx-n2 no-gutters">
+    <div class="col-12">
+      <h2 class="block-header text-center">{% t 'Featured Products' %}</h2>
+    </div>
+    {% if products.all == empty %}
+    {% assign placeholders = "1,2,3,4" | split: "," %}
+    {% for placeholder in placeholders %}
+    {% include 'list_product_placeholder' %}
+    {% endfor %}
+    {% else %}
+    <!-- Featured Products -->
+    {% for product in products.featured limit:options.products_featured_limit %}
+    <div class="col-md-3 col-6 product-block mb-4 px-2">
+      {% include 'list_product' with product %}
+    </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+  {% endif %}
+  {% when "latest-home" or "latest-and-featured-home" %}
+  <!-- Latest Products Section -->
+  <div class="row mb-md-5 mb-4 mx-n2 no-gutters">
+    <div class="col-12">
+      <h2 class="block-header text-center">{% t 'Latest Products' %}</h2>
+    </div>
+    {% if products.all == empty %}
+    {% assign placeholders = "1,2,3,4" | split: "," %}
+    {% for placeholder in placeholders %}
+    {% include 'list_product_placeholder' %}
+    {% endfor %}
+
+    {% else %}
+    <!-- Featured Products -->
+    {% for product in products.latest limit:options.products_home_limit %}
+    <div class="col-md-3 col-6 product-block mb-4 px-2">
+      {% include 'list_product' with product %}
+    </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+  {% when "not-display"%}
+
+  {% endcase %}
+
+  {% include 'home_blog' %}
+</div>
+
+{% if options.instafeed and social.instagram_url != blank %}
+<!-- Instagram widget -->
+<div class="container-fluid mb-5">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="block-header text-center">Instagram</h2>
+    </div>
+    <div id="instagram" class="col-12 limit-{{ options.instagram-limit }}">Instagram</div>
+    {% capture follow_us_translation %}{% t "Follow Us" %}{% endcapture %}
+    <a href="{{ social.instagram_url }}" target="_blank" title="{{follow_us_translation}} @{{ social.instagram_url | split: '/' | last }}" class="btn btn-primary mt-5"><i class="fab fa-instagram" aria-hidden="true"></i> {{ follow_us_translation }}</a>
+  </div>
+</div>
+
+<!-- Instagram code -->
+<script>
+  $.ajax({
+    url: "https://js-instagram-proxy.herokuapp.com/{{ social.instagram_url | split: '/' | last }}/media",
+    dataType: "jsonp",
+    data: {
+      count: {{ options.instagram-limit }}
+  },
+         success: function(json) {
+    for (var i in json.posts) {
+      if(i >= {{options.instagram-limit}}){continue};
+      url = json.posts[i].display_url;
+      shortcode = json.posts[i].shortcode;
+
+      newElement = document.createElement('div');
+      newElement.className = 'insta_img';
+      newElement.style = 'background-image: url(' + url + ')';
+
+      newElementLink = document.createElement('a');
+      newElementLink.href = "https://www.instagram.com/p/" + shortcode;
+      newElementLink.appendChild(newElement);
+
+      var clientHeight = document.getElementById('instagram').clientHeight;
+      document.getElementById("instagram").appendChild(newElementLink);
+    }
+  }
+  });
+</script>
+{% endif %}
+
+<script>
+  function parse_str(str) {
+    return str.split('&').reduce(function(params, param) {
+      var paramSplit = param.split('=').map(function(value) {
+        return decodeURIComponent(value.replace('+', ' '));
+      });
+      params[paramSplit[0]] = paramSplit[1];
+      return params;
+    }, {});
+  }
+</script>

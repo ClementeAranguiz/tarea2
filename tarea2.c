@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
-#include <stdbool.h>
 #include <string.h>
-#include <float.h>
 
 void insertionsort(int **lista){
     int i=1;
@@ -16,14 +13,13 @@ void insertionsort(int **lista){
         }
         (*lista)[prev+1]=current; 
         i++;
-    }
-    
+    } 
 }
 
-int main(){ 
+int *fileToArray(char *nombre_archivo){
     int *array=malloc(sizeof(int));
     FILE *pfile;
-    pfile=fopen("random_150.txt","r");  
+    pfile=fopen(nombre_archivo,"r");  
     char line[30];
     int contador=0;
     while(!feof(pfile)){
@@ -35,13 +31,44 @@ int main(){
     fclose(pfile);
     array=realloc(array, sizeof(int)*(contador+1));
     array[contador]=-1;
-    printf("%d\n",array[149]);
-    insertionsort(&array);
-    printf("%d",array[149]);
+    return array;
+}
+
+int sizeofarray(int* array){
+    int i=0;
+    while(array[i]!=-1){i++;}
+    return i;
+}
+
+void maxheap(int *array,int size){
+    int i=1;
+    while(array[i]!=-1){
+        if (array[i]>array[(i-1)/2]){ 
+            int j = i;
+            while (array[j]>array[(j-1)/2]){ 
+                int k=array[j];
+                array[j]=array[(j-1)/2];
+                array[(j-1)/2]=k;
+                j=(j-1)/2; 
+            } 
+        } 
+        i++;
+    } 
+} 
+void heapsort(int *array, int size){
+    while(1){
+        if(array[size-2]);
+
+    }
+};
+
+
+int main(){ 
+    int *array=fileToArray("random_150.txt");
+    int size=sizeofarray(array);
+    maxheap(array,size);
+    printf("%d\n",array[0]);
+    printf("%d",sizeofarray(array));
     free(array);
     return 0;
-} 
-
-
-
-  
+}

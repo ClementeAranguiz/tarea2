@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "heapsort.h"
-#include "insertionsort.h"
+#include <time.h>
+#include "heapsort.c"
+#include "insertionsort.c"
 
 void printarray(int *array){//imprime cada elemento del array
     int i=0;
@@ -35,17 +36,16 @@ int sizeofarray(int* array){//recorre el array hasta encontrar el -1 para retorn
     return i;
 }
 
-int main(int argc,char *argv[]){ 
-    int *array=fileToArray(argv[1]);//crea el array a partir del archivo dado
+int main(){ 
+    int *array=fileToArray("random_10000.txt");//crea el array a partir del archivo dado
     int size=sizeofarray(array);//calculo su tamaño
-    if(!strcmp(argv[2],"insertionsort")){//si escribió insertionsort lo printea ordenado
-        insertionsort(array);            //con insertionsort
-        printarray(array);
-    }
-    if(!strcmp(argv[2],"heapsort")){//si escribió heapsort lo printea ordenado con heapsort
+    double suma=0.0;
+        clock_t inicio = clock();
         heapsort(array,size);
-        printarray(array);
-    }
+        clock_t fin = clock();
+        suma+=(double) (fin-inicio)/CLOCKS_PER_SEC;
+    printf("hola");
+    printf("%f",suma);
     free(array);//libero el array
     return 0;
 }
